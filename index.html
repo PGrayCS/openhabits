@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>OpenHabits – Level Up Your Life</title>
+  <meta name="description" content="Open source offline-first gamified habit tracker" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="theme-color" content="#0d1117" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <h1><a href="https://pgraycs.github.io/openhabits/" title="Go to project homepage">OpenHabits</a> <span class="beta-tag">alpha</span></h1>
+    <nav>
+      <button id="btn-add-habit" class="primary">+ Habit</button>
+      <button id="btn-stats">Stats</button>
+      <button id="btn-achievements">Achievements</button>
+      <button id="btn-export">Export</button>
+      <label class="import-label">Import<input type="file" id="import-file" accept="application/json" /></label>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="panel" id="daily-quests-panel">
+      <h2>Daily Quests <span id="daily-xp"></span></h2>
+      <div id="daily-quests" class="habit-grid empty-msg">Loading…</div>
+    </section>
+
+    <section class="panel" id="habits-panel">
+      <h2>Your Habits</h2>
+      <div id="habits" class="habit-grid empty-msg">No habits yet – press + Habit to start!</div>
+    </section>
+
+    <section class="panel" id="stats-panel" hidden>
+      <h2>Stats</h2>
+      <div id="stats-content"></div>
+    </section>
+
+    <section class="panel" id="achievements-panel" hidden>
+      <h2>Achievements</h2>
+      <div id="achievements-content"></div>
+    </section>
+  </main>
+
+  <footer>
+    <div id="xp-display">Lvl <span id="level">1</span> • <span id="xp">0</span> XP</div>
+    <div id="streaks-summary"></div>
+  </footer>
+
+  <dialog id="habit-dialog">
+    <form method="dialog" id="habit-form">
+      <h3 id="habit-dialog-title">New Habit</h3>
+      <label>Name <input name="name" required maxlength="60" /></label>
+      <label>Description <textarea name="description" maxlength="240"></textarea></label>
+      <fieldset>
+        <legend>Schedule</legend>
+        <label><input type="checkbox" name="days" value="0" checked />Sun</label>
+        <label><input type="checkbox" name="days" value="1" checked />Mon</label>
+        <label><input type="checkbox" name="days" value="2" checked />Tue</label>
+        <label><input type="checkbox" name="days" value="3" checked />Wed</label>
+        <label><input type="checkbox" name="days" value="4" checked />Thu</label>
+        <label><input type="checkbox" name="days" value="5" checked />Fri</label>
+        <label><input type="checkbox" name="days" value="6" checked />Sat</label>
+      </fieldset>
+      <label>Target / Day <input type="number" name="target" min="1" max="20" value="1" /></label>
+      <menu>
+        <button value="cancel">Cancel</button>
+        <button value="ok" class="primary">Save</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <dialog id="toast" class="toast"></dialog>
+  <canvas id="confetti" aria-hidden="true"></canvas>
+  <script type="module" src="src/app.js"></script>
+</body>
+</html>
