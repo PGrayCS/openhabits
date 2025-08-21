@@ -1,74 +1,29 @@
-OpenHabits
+# 🌱 OpenHabits  
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)  
+[![Status](https://img.shields.io/badge/status-active-success.svg)]()  
+[![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)](CONTRIBUTING.md)  
 
-OpenHabits is a simple, open-source habit tracker you can use directly in your browser.
-No accounts, no fees — your data stays in your browser with an option to export/import if you change devices.
+**OpenHabits** is a free, open-source habit tracker that runs entirely in your browser.  
+No sign-ups. No subscriptions. Just you, your habits, and your progress.  
 
-Features
+---
 
-Add and manage daily habits
+## ✨ Features
+- ➕ Add and manage daily habits  
+- ✅ Mark habits as completed each day  
+- 🔥 Automatic streak tracking  
+- 📤 Export / 📥 Import habits as JSON files  
+- 🌍 Works fully offline (LocalStorage)  
 
-Mark habits as completed each day
+---
 
-Automatic streak tracking
+## 🚀 Getting Started
 
-Export and import your habits as JSON files
+### Use Online
+Once deployed with GitHub Pages:  
+👉 `https://<your-username>.github.io/openhabits/`
 
-Works fully offline (uses LocalStorage)
-
-Getting Started
-Run Online
-
-Once published with GitHub Pages, you can use OpenHabits at:
-https://<your-username>.github.io/openhabits/
-
-Run Locally
-
-Clone this repository:
-
-git clone https://github.com/<your-username>/openhabits.git
-
-
-Open index.html in your browser.
-That’s it — no setup required.
-
-Tech
-
-HTML, CSS, JavaScript (no frameworks)
-
-LocalStorage for data storage
-
-100% static site (no backend needed)
-
-Contributing
-
-Contributions are welcome!
-
-Fork the repo
-
-Create a branch (git checkout -b feature-name)
-
-Commit your changes (git commit -m "Add feature")
-
-Push the branch (git push origin feature-name)
-
-Open a Pull Request
-
-See CONTRIBUTING.md for more details.
-
-License
-
-This project is licensed under the MIT License
-.
-
-Roadmap
-
- Dark mode
-
- Weekly/monthly stats
-
- Optional cloud sync
-
- Mobile-friendly improvements
-
-✅ You can copy this entire thing as-is into your README.md.
-No extra backticks → no broken formatting
+### Run Locally
+1. Clone this repository:  
+   ```bash
+   git clone https://github.com/<your-username>/openhabits.git
