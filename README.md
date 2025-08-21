@@ -39,4 +39,5 @@ That’s it — no setup required.
 3. Make your changes and commit (git commit -m "Add feature")
 4. Push to your branch (git push origin feature-name)
 5. Open a Pull Request 🎉
+
 Check out CONTRIBUTING.md for details.
