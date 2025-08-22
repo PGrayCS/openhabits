@@ -1,4 +1,4 @@
-import { state, todayId, addHabit, completeHabit, pruneTempFlags } from './models.js';
+import { state, todayId, addHabit, completeHabit } from './models.js';
 import { achievementsCatalog } from './rewards.js';
 import { saveState, exportState, importState } from './storage.js';
 
@@ -37,8 +37,10 @@ export function initUI(){
     const fd = new FormData(els.habitForm);
     const days = fd.getAll('days');
     if(days.length===0){ showToast('Select at least one day'); return; }
+    const name = (fd.get('name')||'').trim();
+    if(!name){ showToast('Name required'); return; }
     addHabit({
-      name: fd.get('name'),
+      name,
       description: fd.get('description'),
       days,
       target: fd.get('target')
@@ -49,7 +51,7 @@ export function initUI(){
     renderStats();
   });
 
-  window.addEventListener('beforeunload', pruneTempFlags);
+  // (legacy) no beforeunload cleanup needed anymore
   renderAll();
   setupConfetti();
 }
@@ -96,9 +98,9 @@ export function renderHabits(){
     btn.className = doneToday >= h.target ? '' : 'do';
     btn.addEventListener('click', ()=>{
       if(doneToday >= h.target) return;
-      completeHabit(h.id,1);
+      const res = completeHabit(h.id,1);
       saveState(state);
-      const res = renderAll();
+      renderAll();
       if(res && res.leveled) levelConfetti();
     });
     actions.appendChild(btn);
@@ -166,9 +168,9 @@ function renderDailyQuests(){
     btn.className = done>=h.target? '' : 'do';
     btn.addEventListener('click',()=> {
       if(done>=h.target) return;
-      completeHabit(h.id,1);
+      const res = completeHabit(h.id,1);
       saveState(state);
-      const res = renderAll();
+      renderAll();
       if(res && res.leveled) levelConfetti();
     });
     div.querySelector('.habit-actions').appendChild(btn);

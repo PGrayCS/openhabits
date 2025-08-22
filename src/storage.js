@@ -1,5 +1,10 @@
 const KEY = 'openhabits:v1';
 
+function deepClone(obj){
+  if(typeof structuredClone === 'function') return structuredClone(obj);
+  return JSON.parse(JSON.stringify(obj));
+}
+
 export function loadState() {
   try {
     const raw = localStorage.getItem(KEY);
@@ -12,7 +17,7 @@ export function loadState() {
 }
 
 export function saveState(state) {
-  const safe = structuredClone(state);
+  const safe = deepClone(state);
   safe._lastSaved = Date.now();
   localStorage.setItem(KEY, JSON.stringify(safe));
 }

@@ -43,14 +43,14 @@ export function grantXp(state, amount){
   return { leveled:false };
 }
 
-export function applyGamificationOnCompletion(state, habit){
-  state.gamification.totalCompletions++;
+export function applyGamificationOnCompletion(state, habit, firstTargetHit){
   const today = todayId();
   if(state.gamification.daily.date !== today){
     state.gamification.daily = { date: today, xp:0, completions:0 };
   }
-  if(habit.history[today] >= habit.target && habit._counted){
-    let baseXp = 10 + Math.min(habit.bestStreak, 30);
+  if(firstTargetHit){
+    state.gamification.totalCompletions++;
+    const baseXp = 10 + Math.min(habit.bestStreak, 30);
     state.gamification.daily.completions++;
     state.gamification.daily.xp += baseXp;
     const res = grantXp(state, baseXp);

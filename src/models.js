@@ -53,26 +53,25 @@ export function deleteHabit(id){
 
 export function completeHabit(id, amount=1){
   const h = getHabit(id);
-  if(!h) return;
+  if(!h) return null;
   const day = todayId();
-  h.history[day] = (h.history[day]||0)+amount;
-  if(h.history[day] >= h.target){
-    if(!h._counted){
-      const yesterday = new Date(); yesterday.setDate(yesterday.getDate()-1);
-      const yId = todayId(yesterday);
-      const prevDone = h.history[yId] && h.history[yId] >= h.target;
-      h.streak = prevDone ? (h.streak+1) : 1;
-      if(h.streak > h.bestStreak) h.bestStreak = h.streak;
-      h._counted = true;
-    }
+  const before = h.history[day] || 0;
+  const after = before + amount;
+  h.history[day] = after;
+  let firstTargetHit = false;
+  if(before < h.target && after >= h.target){
+    const yesterday = new Date(); yesterday.setDate(yesterday.getDate()-1);
+    const yId = todayId(yesterday);
+    const prevDone = h.history[yId] && h.history[yId] >= h.target;
+    h.streak = prevDone ? (h.streak+1) : 1;
+    if(h.streak > h.bestStreak) h.bestStreak = h.streak;
+    firstTargetHit = true;
   }
   saveState(state);
-  applyGamificationOnCompletion(state, h);
+  return applyGamificationOnCompletion(state, h, firstTargetHit);
 }
 
-export function pruneTempFlags(){
-  state.habits.forEach(h=> delete h._counted);
-}
+export function pruneTempFlags(){}
 
 export function recalc(){
   recalcAll(state);

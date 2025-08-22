@@ -1,14 +1,15 @@
-const CACHE = 'openhabits-cache-v1';
+const CACHE = 'openhabits-cache-v2';
+const ROOT = self.registration.scope; // base URL, good for GitHub Pages subpath
+const INDEX = ROOT + 'index.html';
 const ASSETS = [
-  './',
-  './index.html',
-  './styles.css',
-  './manifest.webmanifest',
-  './src/app.js',
-  './src/ui.js',
-  './src/models.js',
-  './src/rewards.js',
-  './src/storage.js'
+  INDEX,
+  ROOT + 'styles.css',
+  ROOT + 'manifest.webmanifest',
+  ROOT + 'src/app.js',
+  ROOT + 'src/ui.js',
+  ROOT + 'src/models.js',
+  ROOT + 'src/rewards.js',
+  ROOT + 'src/storage.js'
 ];
 
 self.addEventListener('install', e => {
@@ -21,11 +22,17 @@ self.addEventListener('activate', e => {
 
 self.addEventListener('fetch', e => {
   if(e.request.method !== 'GET') return;
+  if(e.request.mode === 'navigate'){
+    e.respondWith(
+      fetch(e.request).catch(()=> caches.match(INDEX)).then(resp=> resp || caches.match(INDEX))
+    );
+    return;
+  }
   e.respondWith(
     caches.match(e.request).then(r => r || fetch(e.request).then(resp => {
       const copy = resp.clone();
       caches.open(CACHE).then(c => c.put(e.request, copy));
       return resp;
-    }).catch(()=> caches.match('./index.html')))
+    }).catch(()=> caches.match(INDEX)))
   );
 });
