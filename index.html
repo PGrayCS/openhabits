@@ -18,6 +18,7 @@
       <button id="btn-achievements">Achievements</button>
       <button id="btn-export">Export</button>
       <label class="import-label">Import<input type="file" id="import-file" accept="application/json" /></label>
+      <button id="btn-theme" title="Toggle theme">🌙</button>
     </nav>
   </header>
 
@@ -44,7 +45,13 @@
   </main>
 
   <footer>
-    <div id="xp-display">Lvl <span id="level">1</span> • <span id="xp">0</span> XP</div>
+    <div class="footer-left">
+      <div id="xp-display">Lvl <span id="level">1</span> • <span id="xp">0</span> XP</div>
+      <div class="level-progress">
+        <div class="bar"><span id="level-progress-bar"></span></div>
+        <div id="level-progress-label" class="lp-label"></div>
+      </div>
+    </div>
     <div id="streaks-summary"></div>
   </footer>
 

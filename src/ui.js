@@ -1,5 +1,5 @@
 import { state, todayId, addHabit, completeHabit } from './models.js';
-import { achievementsCatalog } from './rewards.js';
+import { achievementsCatalog, xpForLevel } from './rewards.js';
 import { saveState, exportState, importState } from './storage.js';
 
 const els = {};
@@ -19,6 +19,12 @@ export function initUI(){
   els.dailyQuests = document.getElementById('daily-quests');
   els.dailyXp = document.getElementById('daily-xp');
   els.confetti = document.getElementById('confetti');
+  els.levelProgressBar = document.getElementById('level-progress-bar');
+  els.levelProgressLabel = document.getElementById('level-progress-label');
+
+  const themeBtn = document.getElementById('btn-theme');
+  if(themeBtn){ themeBtn.addEventListener('click', toggleTheme); }
+  initTheme();
 
   document.getElementById('btn-add-habit').addEventListener('click', () => openHabitDialog());
   document.getElementById('btn-stats').addEventListener('click',()=> togglePanel(els.statsPanel));
@@ -185,6 +191,7 @@ export function renderAll(){
   renderAchievements();
   els.level.textContent = state.gamification.level;
   els.xp.textContent = state.gamification.xp;
+  renderLevelProgress();
   return {};
 }
 
@@ -237,3 +244,33 @@ function randomColor(){
 }
 
 function escapeHtml(str=''){ return str.replace(/[&<>"']/g, c=> ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c])); }
+
+function renderLevelProgress(){
+  const xp = state.gamification.xp;
+  const lvl = state.gamification.level;
+  const curBase = xpForLevel(lvl);
+  const nextBase = xpForLevel(lvl+1);
+  const span = nextBase - curBase;
+  const into = xp - curBase;
+  const pct = span ? Math.min(100, (into/span)*100) : 100;
+  if(els.levelProgressBar){ els.levelProgressBar.style.width = pct + '%'; }
+  if(els.levelProgressLabel){ els.levelProgressLabel.textContent = `Next level: ${Math.max(0,nextBase - xp)} XP`; }
+}
+
+function initTheme(){
+  const stored = localStorage.getItem('openhabits:theme');
+  if(stored === 'light') document.body.classList.add('light');
+  updateThemeButton();
+}
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('openhabits:theme', document.body.classList.contains('light') ? 'light':'dark');
+  updateThemeButton();
+}
+function updateThemeButton(){
+  const btn = document.getElementById('btn-theme');
+  if(!btn) return;
+  const light = document.body.classList.contains('light');
+  btn.textContent = light ? '🌙' : '☀️';
+  btn.title = light ? 'Switch to dark theme' : 'Switch to light theme';
+}
