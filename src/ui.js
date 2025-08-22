@@ -19,8 +19,13 @@ export function initUI(){
   els.dailyQuests = document.getElementById('daily-quests');
   els.dailyXp = document.getElementById('daily-xp');
   els.confetti = document.getElementById('confetti');
-  els.levelProgressBar = document.getElementById('level-progress-bar');
+  els.levelProgressBar = document.getElementById('level-progress-ring');
   els.levelProgressLabel = document.getElementById('level-progress-label');
+  els.todayDate = document.getElementById('today-date');
+  if(els.todayDate){
+    const d = new Date();
+    els.todayDate.textContent = d.toLocaleDateString(undefined,{weekday:'long', month:'short', day:'numeric'});
+  }
 
   const themeBtn = document.getElementById('btn-theme');
   if(themeBtn){ themeBtn.addEventListener('click', toggleTheme); }
@@ -253,8 +258,12 @@ function renderLevelProgress(){
   const span = nextBase - curBase;
   const into = xp - curBase;
   const pct = span ? Math.min(100, (into/span)*100) : 100;
-  if(els.levelProgressBar){ els.levelProgressBar.style.width = pct + '%'; }
-  if(els.levelProgressLabel){ els.levelProgressLabel.textContent = `Next level: ${Math.max(0,nextBase - xp)} XP`; }
+  if(els.levelProgressBar){
+    const circumference = 2*Math.PI*52; // r=52 matches SVG
+    const offset = circumference - (pct/100)*circumference;
+    els.levelProgressBar.style.strokeDashoffset = offset;
+  }
+  if(els.levelProgressLabel){ els.levelProgressLabel.textContent = `${Math.max(0,nextBase - xp)} XP to go`; }
 }
 
 function initTheme(){

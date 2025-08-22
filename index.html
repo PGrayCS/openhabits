@@ -10,50 +10,72 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <header class="app-header">
-    <h1><a href="https://pgraycs.github.io/openhabits/" title="Go to project homepage">OpenHabits</a> <span class="beta-tag">alpha</span></h1>
-    <nav>
-      <button id="btn-add-habit" class="primary">+ Habit</button>
-      <button id="btn-stats">Stats</button>
-      <button id="btn-achievements">Achievements</button>
-      <button id="btn-export">Export</button>
-      <label class="import-label">Import<input type="file" id="import-file" accept="application/json" /></label>
-      <button id="btn-theme" title="Toggle theme">🌙</button>
-    </nav>
-  </header>
-
-  <main id="main">
-    <section class="panel" id="daily-quests-panel">
-      <h2>Daily Quests <span id="daily-xp"></span></h2>
-      <div id="daily-quests" class="habit-grid empty-msg">Loading…</div>
-    </section>
-
-    <section class="panel" id="habits-panel">
-      <h2>Your Habits</h2>
-      <div id="habits" class="habit-grid empty-msg">No habits yet – press + Habit to start!</div>
-    </section>
-
-    <section class="panel" id="stats-panel" hidden>
-      <h2>Stats</h2>
-      <div id="stats-content"></div>
-    </section>
-
-    <section class="panel" id="achievements-panel" hidden>
-      <h2>Achievements</h2>
-      <div id="achievements-content"></div>
-    </section>
-  </main>
-
-  <footer>
-    <div class="footer-left">
-      <div id="xp-display">Lvl <span id="level">1</span> • <span id="xp">0</span> XP</div>
-      <div class="level-progress">
-        <div class="bar"><span id="level-progress-bar"></span></div>
-        <div id="level-progress-label" class="lp-label"></div>
+  <div class="layout">
+    <aside class="sidebar" aria-label="Primary">
+      <div class="brand">
+        <a href="https://pgraycs.github.io/openhabits/" class="logo-link" title="Project homepage">
+          <span class="logo-icon" aria-hidden="true">⛰️</span>
+          <span class="logo-text">OpenHabits</span>
+        </a>
+        <span class="tag beta">ALPHA</span>
       </div>
+      <div class="level-block">
+        <div class="level-ring" aria-label="Level progress">
+          <svg viewBox="0 0 120 120" class="ring" role="img" aria-hidden="true">
+            <circle cx="60" cy="60" r="52" class="track" />
+            <circle cx="60" cy="60" r="52" class="progress" id="level-progress-ring" />
+          </svg>
+          <div class="level-center">
+            <div class="lvl-label">Lvl</div>
+            <div class="lvl-value" id="level">1</div>
+          </div>
+        </div>
+        <div class="xp-nums" id="xp-display"><span id="xp">0</span> XP • <span id="level-progress-label"></span></div>
+      </div>
+      <nav class="nav">
+        <button id="btn-add-habit" class="primary" title="Add Habit">+ Habit</button>
+        <button id="btn-stats" title="Toggle Stats">Stats</button>
+        <button id="btn-achievements" title="Toggle Achievements">Achievements</button>
+        <button id="btn-export" title="Export data">Export</button>
+        <label class="import-label" title="Import backup">Import<input type="file" id="import-file" accept="application/json" /></label>
+        <button id="btn-theme" title="Toggle theme">🌙</button>
+      </nav>
+      <div class="streaks-box" id="streaks-summary" aria-label="Top streaks"></div>
+      <div class="sidebar-footer">
+        <small>Offline • Private • Open Source</small>
+      </div>
+    </aside>
+    <div class="content" id="main">
+      <header class="topbar">
+        <div class="top-info">
+          <h1 class="visually-hidden">OpenHabits Dashboard</h1>
+          <div class="date" id="today-date"></div>
+        </div>
+      </header>
+      <div class="panels-grid">
+        <section class="panel" id="daily-quests-panel">
+          <h2>Daily Quests <span id="daily-xp"></span></h2>
+          <div id="daily-quests" class="habit-grid empty-msg">Loading…</div>
+        </section>
+        <section class="panel" id="habits-panel">
+          <h2>Your Habits</h2>
+          <div id="habits" class="habit-grid empty-msg">No habits yet – press + Habit to start!</div>
+        </section>
+        <section class="panel" id="stats-panel" hidden>
+          <h2>Stats</h2>
+          <div id="stats-content"></div>
+        </section>
+        <section class="panel" id="achievements-panel" hidden>
+          <h2>Achievements</h2>
+          <div id="achievements-content"></div>
+        </section>
+      </div>
+      <footer class="app-footer">
+        <span>Built with ❤️ for self‑improvement</span>
+        <span class="foot-links"><a href="https://github.com/PGrayCS/openhabits" target="_blank" rel="noopener">GitHub</a></span>
+      </footer>
     </div>
-    <div id="streaks-summary"></div>
-  </footer>
+  </div>
 
   <dialog id="habit-dialog">
     <form method="dialog" id="habit-form">
