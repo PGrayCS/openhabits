@@ -95,12 +95,16 @@ export function renderHabits(){
     card.className='habit-card';
     const doneToday = h.history[todayIdStr] || 0;
     if(doneToday >= h.target) card.classList.add('completed-today');
+    const pct = Math.min(100,(doneToday / h.target)*100);
     card.innerHTML = `
       <h3>${escapeHtml(h.name)}</h3>
       <div class="desc">${escapeHtml(h.description)}</div>
-      <div class="streak">🔥 ${h.streak || 0} (best ${h.bestStreak||0})</div>
-      <div class="streak">Days: ${h.days.map(dayName).join(', ')}</div>
-      <div class="streak">Progress: ${doneToday}/${h.target}</div>
+      <div class="habit-meta">
+        <span>🔥 ${h.streak || 0} (best ${h.bestStreak||0})</span>
+        <span>${h.days.map(dayName).join(', ')}</span>
+        <span>${doneToday}/${h.target}</span>
+      </div>
+      <div class="progress-line"><span style="--p:${pct}%;"></span></div>
       <div class="habit-actions"></div>
     `;
     const actions = card.querySelector('.habit-actions');
@@ -153,6 +157,9 @@ function renderStats(){
     <p>Avg current streak: ${avgStreak}</p>
     <p>Days since start: ${daysActive}</p>
   `;
+  const mc = document.getElementById('metric-total-completions'); if(mc) mc.textContent = total;
+  const mh = document.getElementById('metric-total-habits'); if(mh) mh.textContent = state.habits.length;
+  const ma = document.getElementById('metric-average-streak'); if(ma) ma.textContent = avgStreak;
 }
 
 function renderDailyQuests(){
@@ -169,10 +176,11 @@ function renderDailyQuests(){
     const done = h.history[todayStr] || 0;
     div.className = 'habit-card';
     if(done>=h.target) div.classList.add('completed-today');
+    const pct = Math.min(100,(done / h.target)*100);
     div.innerHTML = `
       <h3>${escapeHtml(h.name)}</h3>
       <div class="desc">${escapeHtml(h.description)}</div>
-      <div class="streak">${done}/${h.target}</div>
+      <div class="progress-line"><span style="--p:${pct}%;"></span></div>
       <div class="habit-actions"></div>`;
     const btn = document.createElement('button');
     btn.textContent = done>=h.target ? '✓' : '+1';
@@ -188,6 +196,9 @@ function renderDailyQuests(){
     container.appendChild(div);
   });
   els.dailyXp.textContent = `(${state.gamification.daily.xp} XP today)`;
+  if(els.dailyXp && els.dailyXp.closest('[data-metric]')){
+    els.dailyXp.textContent = state.gamification.daily.xp;
+  }
 }
 
 export function renderAll(){
@@ -248,7 +259,7 @@ function randomColor(){
   return colors[Math.random()*colors.length|0];
 }
 
-function escapeHtml(str=''){ return str.replace(/[&<>"']/g, c=> ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c])); }
+function escapeHtml(str=''){ return str.replace(/[&<>"]|'/g, c=> ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c])); }
 
 function renderLevelProgress(){
   const xp = state.gamification.xp;
