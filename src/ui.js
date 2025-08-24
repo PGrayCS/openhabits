@@ -67,6 +67,9 @@ export function initUI(){
     showToast('Habit added');
     renderHabits();
     renderStats();
+    if(els._lastFocus && typeof els._lastFocus.focus==='function'){
+      setTimeout(()=> els._lastFocus.focus(), 0);
+    }
   });
 
   // (legacy) no beforeunload cleanup needed anymore
@@ -82,8 +85,11 @@ function togglePanel(panel){
 }
 
 function openHabitDialog(){
+  els._lastFocus = document.activeElement;
   els.habitForm.reset();
   els.habitDialog.showModal();
+  const first = els.habitForm.querySelector('input[name="name"]');
+  if(first) first.focus();
 }
 
 function dayName(i){
