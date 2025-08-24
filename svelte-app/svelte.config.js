@@ -1,8 +1,10 @@
-import { sveltekit } from '@sveltejs/kit';
+import adapter from '@sveltejs/adapter-auto';
 
-/** @type {import('vite').UserConfig} */
+/** @type {import('@sveltejs/kit').Config} */
 const config = {
-  plugins: [sveltekit()],
+  kit: {
+    adapter: adapter(),
+  }
 };
 
 export default config;
