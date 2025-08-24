@@ -4,12 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>OpenHabits – Level Up Your Life</title>
-  <meta name="description" content="Open source offline-first gamified habit tracker" />
+  <meta name="description" content="Open source, privacy-first, offline-capable habit tracker that turns tiny wins into meaningful momentum." />
+  <meta name="color-scheme" content="dark light" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <link rel="manifest" href="manifest.webmanifest" />
   <meta name="theme-color" content="#0d1117" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <a href="#main" class="skip-link">Skip to main content</a>
   <div class="layout">
     <aside class="sidebar" aria-label="Primary">
       <div class="brand">
@@ -46,12 +50,17 @@
       </div>
     </aside>
     <div class="content" id="main">
-      <header class="topbar">
+      <header class="topbar" role="banner">
         <div class="top-info">
           <h1 class="visually-hidden">OpenHabits Dashboard</h1>
           <div class="date" id="today-date"></div>
+          <div id="connection-status" aria-live="polite" class="connection-status" hidden>Offline</div>
         </div>
       </header>
+      <section class="panel highlight" id="weekly-brief-panel" aria-labelledby="weekly-brief-title">
+        <h2 id="weekly-brief-title">Weekly Brief</h2>
+        <div id="weekly-brief" class="weekly-brief-loading" aria-live="polite">Preparing insights…</div>
+      </section>
       <div class="panels-grid">
         <section class="panel" id="daily-quests-panel">
           <h2>Daily Quests <span id="daily-xp"></span></h2>
@@ -107,6 +116,7 @@
   </dialog>
 
   <dialog id="toast" class="toast"></dialog>
+  <div id="live-region" class="visually-hidden" aria-live="polite" aria-atomic="true"></div>
   <canvas id="confetti" aria-hidden="true"></canvas>
   <script type="module" src="src/app.js"></script>
   <script>

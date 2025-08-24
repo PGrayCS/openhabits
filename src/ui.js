@@ -27,6 +27,12 @@ export function initUI(){
     const d = new Date();
     els.todayDate.textContent = d.toLocaleDateString(undefined,{weekday:'long', month:'short', day:'numeric'});
   }
+  els.weeklyBrief = document.getElementById('weekly-brief');
+  els.connection = document.getElementById('connection-status');
+  els.liveRegion = document.getElementById('live-region');
+
+  setupConnectionStatus();
+  renderWeeklyBrief();
 
   const themeBtn = document.getElementById('btn-theme');
   if(themeBtn){ themeBtn.addEventListener('click', toggleTheme); }
@@ -233,7 +239,48 @@ export function renderAll(){
   els.level.textContent = state.gamification.level;
   els.xp.textContent = state.gamification.xp;
   renderLevelProgress();
+  renderWeeklyBrief();
   return {};
+}
+
+function announce(msg){ if(els.liveRegion){ els.liveRegion.textContent=''; setTimeout(()=> els.liveRegion.textContent = msg, 10);} }
+
+function setupConnectionStatus(){
+  if(!els.connection) return;
+  function update(){
+    if(navigator.onLine){ els.connection.hidden=true; announce('Online'); }
+    else { els.connection.hidden=false; els.connection.textContent='Offline'; announce('You are offline'); }
+  }
+  window.addEventListener('online', update);
+  window.addEventListener('offline', update);
+  update();
+}
+
+function renderWeeklyBrief(){
+  if(!els.weeklyBrief) return;
+  const now = new Date();
+  const weekStart = new Date(now); weekStart.setDate(now.getDate() - now.getDay());
+  const weekId = weekStart.toISOString().slice(0,10);
+  // Simple derived insights (placeholder for richer analytics)
+  if(state.habits.length===0){ els.weeklyBrief.innerHTML = '<p>Add your first habit to see insights.</p>'; return; }
+  let totalCompletions=0; let active=0; let topStreak=null; let variety=0;
+  state.habits.forEach(h=>{
+    const histKeys = Object.keys(h.history||{}).filter(k=> k>=weekId);
+    const completions = histKeys.reduce((a,k)=> a + (h.history[k]||0),0);
+    totalCompletions += completions;
+    if(completions>0) active++;
+    if(topStreak==null || (h.streak||0) > topStreak.streak) topStreak = h;
+    variety += h.days ? h.days.length : 0;
+  });
+  const avgPerHabit = (totalCompletions / (state.habits.length||1)).toFixed(1);
+  const participation = ((active / state.habits.length)*100).toFixed(0);
+  const lines = [];
+  lines.push(`<div><strong>${totalCompletions}</strong> total actions this week (${avgPerHabit}/habit)</div>`);
+  lines.push(`<div><strong>${participation}%</strong> of habits active</div>`);
+  if(topStreak) lines.push(`<div>🔥 Top streak: <strong>${escapeHtml(topStreak.name)}</strong> (${topStreak.streak||0})</div>`);
+  const momentum = totalCompletions >= state.habits.length ? 'Great momentum—keep the chain going!' : 'A spark is there—add one more session today.';
+  lines.push(`<div>${momentum}</div>`);
+  els.weeklyBrief.innerHTML = lines.join('');
 }
 
 function showToast(msg){
