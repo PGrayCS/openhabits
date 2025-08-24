@@ -9,7 +9,8 @@ const ASSETS = [
   ROOT + 'src/ui.js',
   ROOT + 'src/models.js',
   ROOT + 'src/rewards.js',
-  ROOT + 'src/storage.js'
+  ROOT + 'src/storage.js',
+  ROOT + 'src/templates.js'
 ];
 
 self.addEventListener('install', e => {

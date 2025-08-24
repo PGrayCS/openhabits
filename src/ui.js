@@ -1,4 +1,5 @@
 import { state, todayId, addHabit, completeHabit } from './models.js';
+import { completionsThisWeek } from './models.js';
 import { achievementsCatalog, xpForLevel } from './rewards.js';
 import { saveState, exportState, importState } from './storage.js';
 
@@ -46,14 +47,20 @@ export function initUI(){
   els.habitForm.addEventListener('submit', e => {
     e.preventDefault();
     const fd = new FormData(els.habitForm);
-    const days = fd.getAll('days');
-    if(days.length===0){ showToast('Select at least one day'); return; }
+    const scheduleType = fd.get('scheduleType') || 'daysOfWeek';
+    let selectedDays = [];
+    if(scheduleType === 'daysOfWeek'){
+      selectedDays = fd.getAll('days');
+      if(selectedDays.length===0){ showToast('Select at least one day'); return; }
+    }
     const name = (fd.get('name')||'').trim();
     if(!name){ showToast('Name required'); return; }
     addHabit({
       name,
       description: fd.get('description'),
-      days,
+      days: selectedDays,
+      scheduleType,
+      timesPerWeek: fd.get('timesPerWeek'),
       target: fd.get('target')
     });
     els.habitDialog.close();
@@ -96,12 +103,18 @@ export function renderHabits(){
     const doneToday = h.history[todayIdStr] || 0;
     if(doneToday >= h.target) card.classList.add('completed-today');
     const pct = Math.min(100,(doneToday / h.target)*100);
+    let scheduleLabel;
+    if(h.scheduleType === 'timesPerWeek'){
+      scheduleLabel = `${completionsThisWeek(h)}/${h.timesPerWeek} wk`;
+    } else {
+      scheduleLabel = h.days.map(dayName).join(', ');
+    }
     card.innerHTML = `
       <h3>${escapeHtml(h.name)}</h3>
       <div class="desc">${escapeHtml(h.description)}</div>
       <div class="habit-meta">
         <span>🔥 ${h.streak || 0} (best ${h.bestStreak||0})</span>
-        <span>${h.days.map(dayName).join(', ')}</span>
+        <span>${scheduleLabel}</span>
         <span>${doneToday}/${h.target}</span>
       </div>
       <div class="progress-line"><span style="--p:${pct}%;"></span></div>
@@ -165,7 +178,13 @@ function renderStats(){
 function renderDailyQuests(){
   const today = new Date();
   const weekday = today.getDay();
-  const due = state.habits.filter(h => h.days.includes(weekday));
+  const due = state.habits.filter(h => {
+    if(h.scheduleType === 'timesPerWeek'){
+      const done = completionsThisWeek(h);
+      return done < (h.timesPerWeek || 3); // show until quota met
+    }
+    return h.days.includes(weekday);
+  });
   const container = els.dailyQuests;
   if(due.length===0){ container.textContent='No quests today'; container.classList.add('empty-msg'); return; }
   container.classList.remove('empty-msg');

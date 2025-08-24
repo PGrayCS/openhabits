@@ -93,6 +93,12 @@
         <label><input type="checkbox" name="days" value="6" checked />Sat</label>
       </fieldset>
       <label>Target / Day <input type="number" name="target" min="1" max="20" value="1" /></label>
+      <fieldset>
+        <legend>Schedule Mode</legend>
+        <label><input type="radio" name="scheduleType" value="daysOfWeek" checked /> Days of Week</label>
+        <label><input type="radio" name="scheduleType" value="timesPerWeek" /> Times / Week</label>
+      </fieldset>
+      <label data-schedule="timesPerWeek" hidden>Times per Week <input type="number" name="timesPerWeek" min="1" max="7" value="3" /></label>
       <menu>
         <button value="cancel">Cancel</button>
         <button value="ok" class="primary">Save</button>
@@ -103,5 +109,27 @@
   <dialog id="toast" class="toast"></dialog>
   <canvas id="confetti" aria-hidden="true"></canvas>
   <script type="module" src="src/app.js"></script>
+  <script>
+    // Toggle schedule fields (days vs times per week)
+    window.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('habit-form');
+      if(!form) return;
+      const modeRadios = form.querySelectorAll('input[name="scheduleType"]');
+      const dayFieldset = form.querySelectorAll('fieldset')[0];
+      const tpwLabel = form.querySelector('[data-schedule="timesPerWeek"]');
+      function update(){
+        const val = form.querySelector('input[name="scheduleType"]:checked')?.value;
+        if(val === 'timesPerWeek'){
+          dayFieldset.hidden = true;
+          tpwLabel.hidden = false;
+        } else {
+          dayFieldset.hidden = false;
+          tpwLabel.hidden = true;
+        }
+      }
+      modeRadios.forEach(r=> r.addEventListener('change', update));
+      update();
+    });
+  </script>
 </body>
 </html>
