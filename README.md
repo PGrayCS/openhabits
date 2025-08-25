@@ -1,3 +1,4 @@
+# [🌟 Try the Live Demo!](https://pgraycs.github.io/openhabits/)
 # OpenHabits
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
